@@ -1,0 +1,40 @@
+name: Build Mini Uplay API Emulator
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Install MinGW-w64 cross-compiler
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gcc-mingw-w64-i686 g++-mingw-w64-i686
+        
+    - name: Verify cross-compiler installation
+      run: make check-deps
+      
+    - name: Build project
+      run: make all
+      
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: upc_r1_loader-dll
+        path: dist/upc_r1_loader.dll
+        retention-days: 30
+        
+    - name: Show build info
+      run: |
+        echo "Build completed successfully!"
+        ls -la dist/
+        file dist/upc_r1_loader.dll
