@@ -78,7 +78,7 @@ jobs:
           - Date: ${{ steps.release_info.outputs.date }}
           
           **Files:**
-          - `upc_r1_loader.dll` - Main emulator DLL
+          - `upc_r1_loader.dll`
         draft: false
         prerelease: false
         
