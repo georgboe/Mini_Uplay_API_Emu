@@ -4,7 +4,7 @@
 #include <vector>
 
 
-#define UPLAY_EXPORT extern "C" _declspec(dllexport)
+#define UPLAY_EXPORT extern "C" __declspec(dllexport)
 
 HANDLE fileuplay = 0;
 void* DirectoryBuffer = 0;
@@ -976,4 +976,14 @@ UPLAY_EXPORT int UPLAY_CHAT_SendMessage()
 UPLAY_EXPORT int UPLAY_CHAT_SentMessagesRead()
 {
 	return 0;
+}
+
+UPLAY_EXPORT int UPLAY_PRODUCT_GetProductList(DWORD a1, DWORD a2, DWORD a3)
+{
+	return 1;
+}
+
+UPLAY_EXPORT int UPLAY_PRODUCT_ReleaseProductList(DWORD a1)
+{
+	return 1;
 }
