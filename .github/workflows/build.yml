@@ -18,7 +18,9 @@ jobs:
     - name: Install MinGW-w64 cross-compiler
       run: |
         sudo apt-get update
-        sudo apt-get install -y gcc-mingw-w64-i686 g++-mingw-w64-i686
+        sudo apt-get install -y --no-install-recommends gcc-mingw-w64-i686 g++-mingw-w64-i686
+      env:
+        DEBIAN_FRONTEND: noninteractive
         
     - name: Verify cross-compiler installation
       run: make check-deps
