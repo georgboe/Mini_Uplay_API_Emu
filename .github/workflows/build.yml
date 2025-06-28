@@ -40,3 +40,53 @@ jobs:
         echo "Build completed successfully!"
         ls -la dist/
         file dist/upc_r1_loader.dll
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: upc_r1_loader-dll
+        path: ./artifacts
+        
+    - name: Generate release tag
+      id: tag
+      run: |
+        echo "tag=v$(date +'%Y.%m.%d')-$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_OUTPUT
+        
+    - name: Create Release
+      uses: actions/create-release@v1
+      id: create_release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.tag.outputs.tag }}
+        release_name: Mini Uplay API Emulator ${{ steps.tag.outputs.tag }}
+        body: |
+          Automated release of Mini Uplay API Emulator
+          
+          **Changes:**
+          - Built from commit ${{ github.sha }}
+          - Date: $(date +'%Y-%m-%d %H:%M:%S UTC')
+          
+          **Files:**
+          - `upc_r1_loader.dll` - Main emulator DLL
+        draft: false
+        prerelease: false
+        
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifacts/upc_r1_loader.dll
+        asset_name: upc_r1_loader.dll
+        asset_content_type: application/octet-stream
