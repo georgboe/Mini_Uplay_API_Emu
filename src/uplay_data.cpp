@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <cstdint>
 
 
 #define UPLAY_EXPORT extern "C" __declspec(dllexport)
